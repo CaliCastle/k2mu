@@ -1,5 +1,5 @@
 <template>
-  <div class="cursor-wrapper">
+  <div class="cursor-wrapper" :class="{ stab: isMouseDown }">
     <div ref="cursor-claw" class="cursor cursor--claw"></div>
     <div ref="cursor-knife" class="cursor cursor--knife"></div>
     <canvas ref="cursor-canvas" class="cursor cursor--canvas" resize></canvas>
@@ -10,6 +10,11 @@
 import { TweenMax } from 'gsap/TweenMax'
 
 export default {
+  data() {
+    return {
+      isMouseDown: false
+    }
+  },
   props: {
     cursor: {
       type: Object
@@ -31,9 +36,11 @@ export default {
 
       requestAnimationFrame(this.renderCursor)
     },
-    handleCursorClick(e) {
-      // eslint-disable-next-line no-console
-      console.info(e)
+    handleMouseDown() {
+      this.isMouseDown = true
+    },
+    handleMouseUp() {
+      this.isMouseDown = false
     }
   }
 }

@@ -2,11 +2,12 @@
   <div
     class="k2mu min-h-screen"
     @mousemove="trackCursor"
-    @click="handleCursorClick"
+    @mousedown="handleMouseDown"
+    @mouseup="handleMouseUp"
   >
     <ComingSoon v-if="!ready" />
     <div v-else></div>
-    <KnifeCursor :cursor="cursorInfo" />
+    <KnifeCursor ref="cursor" :cursor="cursorInfo" />
   </div>
 </template>
 
@@ -20,7 +21,7 @@ export default {
   components: { ComingSoon, KnifeCursor },
   data() {
     return {
-      ready: true,
+      ready: false,
       cursorInfo: { x: -100, y: -100 }
     }
   },
@@ -28,9 +29,11 @@ export default {
     trackCursor(e) {
       this.cursorInfo = { x: e.clientX, y: e.clientY }
     },
-    handleCursorClick(e) {
-      // eslint-disable-next-line no-console
-      console.info(e)
+    handleMouseDown(e) {
+      this.$refs.cursor.handleMouseDown(e)
+    },
+    handleMouseUp(e) {
+      this.$refs.cursor.handleMouseUp(e)
     }
   }
 }
