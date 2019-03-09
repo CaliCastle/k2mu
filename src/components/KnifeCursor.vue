@@ -7,12 +7,24 @@
 </template>
 
 <script>
+import paper from 'paper'
+import SimplexNoise from 'simplex-noise'
 import { TweenMax } from 'gsap/TweenMax'
 
 export default {
   data() {
     return {
-      isMouseDown: false
+      isMouseDown: false,
+      cursorMeta: {
+        lastX: 0,
+        lastY: 0,
+        isStuck: false,
+        showCursor: false,
+        group: {},
+        stuckX: {},
+        stuckY: {},
+        fillOuterCursor: {}
+      }
     }
   },
   props: {
@@ -21,11 +33,136 @@ export default {
     }
   },
   mounted() {
+    this.setupKnifeables()
+    this.setupCanvas()
     requestAnimationFrame(this.renderCursor)
-    // let canvas = this.$refs['cursor-canvas']
-    // paper.setup(canvas)
   },
   methods: {
+    setupKnifeables() {
+      for (const knifeable of document.querySelectorAll('.knifeable')) {
+        knifeable.addEventListener('mouseenter', this.handleMouseEnter)
+        knifeable.addEventListener('mouseleave', this.handleMouseLeave)
+      }
+    },
+    setupCanvas() {
+      const canvas = this.$refs['cursor-canvas'],
+        shapeBounds = {
+          width: 75,
+          height: 75
+        }
+      paper.setup(canvas)
+
+      const strokeColor = 'rgba(225, 15, 25, 0.5)',
+        strokeWidth = 4,
+        segments = 8
+      const radius = 30,
+        noiseScale = 180,
+        noiseRange = 6
+
+      let isNoisy = false
+
+      const polygon = new paper.Path.RegularPolygon(
+        new paper.Point(0, 0),
+        segments,
+        radius
+      )
+      polygon.strokeColor = strokeColor
+      polygon.strokeWidth = strokeWidth
+      polygon.smooth()
+
+      this.cursorMeta.group = new paper.Group([polygon])
+      this.cursorMeta.group.applyMatrix = false
+
+      const noise = polygon.segments.map(() => new SimplexNoise())
+      let bigCoordinates = []
+
+      const lerp = (a, b, n) => {
+        return (1 - n) * a + n * b
+      }
+
+      const map = (value, in_min, in_max, out_min, out_max) => {
+        return (
+          ((value - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min
+        )
+      }
+
+      // the draw loop of Paper.js
+      // (60fps with requestAnimationFrame under the hood)
+      paper.view.onFrame = event => {
+        // using linear interpolation, the circle will move 0.2 (20%)
+        // of the distance between its current position and the mouse
+        // coordinates per Frame
+        const { lastX, lastY, group, isStuck, stuckX, stuckY } = this.cursorMeta
+        const { x, y } = this.cursor
+
+        if (!isStuck) {
+          // move shape around normally
+          this.cursorMeta.lastX = lerp(lastX, x, 0.35)
+          this.cursorMeta.lastY = lerp(lastY, y, 0.35)
+          group.position = new paper.Point(lastX, lastY)
+        } else {
+          this.cursorMeta.lastX = lerp(lastX, stuckX, 0.35)
+          this.cursorMeta.lastY = lerp(lastY, stuckY, 0.35)
+          group.position = new paper.Point(lastX, lastY)
+        }
+
+        if (isStuck && polygon.bounds.width < shapeBounds.width) {
+          polygon.scale(1.08)
+        } else if (!isStuck && polygon.bounds.width > 30) {
+          if (isNoisy) {
+            polygon.segments.forEach((segment, i) => {
+              segment.point.set(bigCoordinates[i][0], bigCoordinates[i][1])
+            })
+            isNoisy = false
+            bigCoordinates = []
+          }
+
+          const scaleDown = 0.92
+          polygon.scale(scaleDown)
+        }
+
+        if (isStuck && polygon.bounds.width >= shapeBounds.width) {
+          isNoisy = true
+          if (bigCoordinates.length === 0) {
+            polygon.segments.forEach((segment, i) => {
+              bigCoordinates[i] = [segment.point.x, segment.point.y]
+            })
+          }
+
+          polygon.segments.forEach((segment, i) => {
+            const noiseX = noise[i].noise2D(event.count / noiseScale, 0),
+              noiseY = noise[i].noise2D(event.count / noiseScale, 1)
+
+            const distortionX = map(noiseX, -1, 1, -noiseRange, noiseRange),
+              distortionY = map(noiseY, -1, 1, -noiseRange, noiseRange)
+
+            const newX = bigCoordinates[i][0] + distortionX,
+              newY = bigCoordinates[i][1] + distortionY
+
+            segment.point.set(newX, newY)
+          })
+        }
+
+        polygon.smooth()
+      }
+    },
+    handleMouseDown() {
+      this.isMouseDown = true
+    },
+    handleMouseUp() {
+      this.isMouseDown = false
+    },
+    handleMouseEnter(event) {
+      const { currentTarget } = event
+      const bounds = currentTarget.getBoundingClientRect()
+
+      this.cursorMeta.stuckX = Math.round(bounds.left + bounds.width / 2)
+      this.cursorMeta.stuckY = Math.round(bounds.top + bounds.height / 2)
+      this.cursorMeta.isStuck = true
+    },
+    handleMouseLeave() {
+      this.cursorMeta.isStuck = false
+    },
     renderCursor() {
       const { x, y } = this.cursor,
         claw = this.$refs['cursor-claw'],
@@ -35,12 +172,6 @@ export default {
       TweenMax.set(knife, { x, y })
 
       requestAnimationFrame(this.renderCursor)
-    },
-    handleMouseDown() {
-      this.isMouseDown = true
-    },
-    handleMouseUp() {
-      this.isMouseDown = false
     }
   }
 }
@@ -56,8 +187,8 @@ export default {
 .cursor--claw
   width: 3rem
   height: 3rem
-  left: 1rem
-  top: 1rem
+  left: 1.32rem
+  top: 1.3rem
   z-index: 11000
   background: url('../assets/claw@2x.png') center no-repeat
   background-size: contain
@@ -65,8 +196,8 @@ export default {
 .cursor--knife
   width: 3.5rem;
   height: 3.5rem;
-  left: -0.8rem;
-  top: -0.6rem;
+  left: -0.5rem;
+  top: -0.25rem;
   z-index: 10000
   background: url('../assets/knife@2x.png') center no-repeat
   background-size: contain

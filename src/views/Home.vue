@@ -6,22 +6,24 @@
     @mouseup="handleMouseUp"
   >
     <ComingSoon v-if="!ready" />
-    <div v-else></div>
+    <main v-else>
+      <NavBar />
+    </main>
     <KnifeCursor ref="cursor" :cursor="cursorInfo" />
   </div>
 </template>
 
 <script>
-// import paper from 'paper'
+import NavBar from '../components/NavBar'
 import ComingSoon from '../components/ComingSoon'
 import KnifeCursor from '../components/KnifeCursor'
 
 export default {
   name: 'home',
-  components: { ComingSoon, KnifeCursor },
+  components: { NavBar, ComingSoon, KnifeCursor },
   data() {
     return {
-      ready: false,
+      ready: true,
       cursorInfo: { x: -100, y: -100 }
     }
   },
@@ -41,7 +43,7 @@ export default {
 
 <style lang="stylus">
 .k2mu
-  --color-text: #fff
+  --color-text: #e1e1e1
   --color-bg #1f1f1f
   --color-link #df5a3a
   background-color var(--color-bg)
