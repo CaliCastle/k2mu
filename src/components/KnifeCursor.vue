@@ -53,9 +53,10 @@ export default {
       paper.setup(canvas)
 
       const strokeColor = 'rgba(225, 15, 25, 0.5)',
+        stuckStrokeColor = 'rgba(225, 15, 25, 0.75)',
         strokeWidth = 4,
-        segments = 8
-      const radius = 30,
+        segments = 30
+      const radius = 12,
         noiseScale = 180,
         noiseRange = 6
 
@@ -100,14 +101,16 @@ export default {
           this.cursorMeta.lastX = lerp(lastX, x, 0.35)
           this.cursorMeta.lastY = lerp(lastY, y, 0.35)
           group.position = new paper.Point(lastX, lastY)
+          polygon.strokeColor = strokeColor
         } else {
           this.cursorMeta.lastX = lerp(lastX, stuckX, 0.35)
           this.cursorMeta.lastY = lerp(lastY, stuckY, 0.35)
           group.position = new paper.Point(lastX, lastY)
+          polygon.strokeColor = stuckStrokeColor
         }
 
         if (isStuck && polygon.bounds.width < shapeBounds.width) {
-          polygon.scale(1.08)
+          polygon.scale(1.15)
         } else if (!isStuck && polygon.bounds.width > 30) {
           if (isNoisy) {
             polygon.segments.forEach((segment, i) => {
@@ -117,7 +120,7 @@ export default {
             bigCoordinates = []
           }
 
-          const scaleDown = 0.92
+          const scaleDown = 0.85
           polygon.scale(scaleDown)
         }
 
@@ -189,7 +192,7 @@ export default {
   height: 3rem
   left: 1.32rem
   top: 1.3rem
-  z-index: 11000
+  z-index: 12000
   background: url('../assets/claw@2x.png') center no-repeat
   background-size: contain
 
@@ -198,12 +201,12 @@ export default {
   height: 3.5rem;
   left: -0.5rem;
   top: -0.25rem;
-  z-index: 10000
+  z-index: 11000
   background: url('../assets/knife@2x.png') center no-repeat
   background-size: contain
 
 .cursor--canvas
   width: 100vw
   height: 100vh
-  z-index: 12000
+  z-index: 10000
 </style>

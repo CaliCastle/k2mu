@@ -45,7 +45,7 @@ export default {
 .k2mu
   --color-text: #e1e1e1
   --color-bg #1f1f1f
-  --color-link #df5a3a
+  --color-link #ea8e6a
   background-color var(--color-bg)
   &, *
     cursor none !important
