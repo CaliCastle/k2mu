@@ -14,6 +14,7 @@ import { TweenMax } from 'gsap/TweenMax'
 export default {
   data() {
     return {
+      cursor: { x: -100, y: -100 },
       isMouseDown: false,
       cursorMeta: {
         lastX: 0,
@@ -27,17 +28,18 @@ export default {
       }
     }
   },
-  props: {
-    cursor: {
-      type: Object
-    }
-  },
   mounted() {
+    this.setupCursorTracking()
     this.setupKnifeables()
     this.setupCanvas()
     requestAnimationFrame(this.renderCursor)
   },
   methods: {
+    setupCursorTracking() {
+      document.addEventListener('mousemove', e => {
+        this.cursor = { x: e.clientX, y: e.clientY }
+      })
+    },
     setupKnifeables() {
       for (const knifeable of document.querySelectorAll('.knifeable')) {
         knifeable.addEventListener('mouseenter', this.handleMouseEnter)

@@ -1,11 +1,12 @@
 <template>
-  <nav class="top-nav flex justify-end absolute pin-x px-8 pt-6">
+  <nav class="top-nav flex justify-end fixed pin-x px-8 pt-6">
     <a
       class="knifeable vvspaceship"
       href="https://vvspaceship.website"
       target="_blank"
+      name="very very spaceship"
     >
-      <svg class="fill-current" viewBox="0 0 206 204">
+      <svg class="fill-current" viewBox="0 0 206 204" id="vvspaceship">
         <g stroke="none">
           <path
             d="M146,144 L166,144 L166,164 L146,164 L146,144 Z M166,164 L186,164 L186,184 L166,184 L166,164 Z M186,184 L206,184 L206,204 L186,204 L186,184 Z"
@@ -66,20 +67,20 @@ export default {
 
             span {
                 background: var(--color-text)
-                height: 0.24rem
+                height: 0.2rem
                 border-radius: 4px
-                transition: all .15s ease-in
+                transition: all .15s ease
 
                 &:nth-of-type(1) {
-                    top: 0
+                    top: .25rem
                 }
 
                 &:nth-of-type(2) {
-                    top: 0.7rem
+                    top: 0.8rem
                 }
 
                 &:nth-of-type(3) {
-                    top: 1.4rem
+                    top: 1.45rem
                 }
             }
         }
@@ -100,14 +101,37 @@ export default {
                 fill: var(--color-link)
 
                 &, & * {
-                    transition: all .15s ease-in
+                    transition: all .15s ease
                 }
             }
         }
     }
 
     .vvspaceship {
+        position: relative
+
+        &:before {
+            content: attr(name)
+            color: currentColor
+            font-weight bold
+            font-size 0.9rem
+            text-align: center
+            text-transform: lowercase
+            font-family 'Roboto', -apple-system, sans-serif
+            display: inline
+            position: absolute
+            opacity: 0
+            transition: all 0.135s ease
+            bottom: 0
+            transform: translateY(50%)
+        }
+
         &:hover {
+            &:before {
+                opacity: 1
+                transform: translateY(115%)
+            }
+
             #trail {
 
             }
