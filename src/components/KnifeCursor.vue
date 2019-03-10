@@ -1,8 +1,21 @@
 <template>
   <div class="cursor-wrapper" :class="{ stab: isMouseDown }">
-    <div ref="cursor-claw" class="cursor cursor--claw"></div>
-    <div ref="cursor-knife" class="cursor cursor--knife"></div>
-    <canvas ref="cursor-canvas" class="cursor cursor--canvas" resize></canvas>
+    <div
+      ref="cursor-claw"
+      class="cursor cursor--claw"
+      :style="{ zIndex: cursorMeta.z }"
+    ></div>
+    <div
+      ref="cursor-knife"
+      class="cursor cursor--knife"
+      :style="{ zIndex: cursorMeta.z - 10 }"
+    ></div>
+    <canvas
+      ref="cursor-canvas"
+      class="cursor cursor--canvas"
+      :style="{ zIndex: cursorMeta.z - 20 }"
+      resize
+    ></canvas>
   </div>
 </template>
 
@@ -24,7 +37,8 @@ export default {
         group: {},
         stuckX: {},
         stuckY: {},
-        fillOuterCursor: {}
+        fillOuterCursor: {},
+        z: 12000
       }
     }
   },
@@ -32,9 +46,15 @@ export default {
     this.setupCursorTracking()
     this.setupKnifeables()
     this.setupCanvas()
+
+    this.$root.$on('nav-toggled', this.navToggled)
+
     requestAnimationFrame(this.renderCursor)
   },
   methods: {
+    navToggled(isOpened) {
+      this.cursorMeta.z = isOpened === true ? 16000 : 12000
+    },
     setupCursorTracking() {
       document.addEventListener('mousemove', e => {
         this.cursor = { x: e.clientX, y: e.clientY }

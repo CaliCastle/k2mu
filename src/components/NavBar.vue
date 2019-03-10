@@ -43,30 +43,190 @@
         </g>
       </svg>
     </a>
-    <a
-      class="knifeable hamburger"
-      href="#"
-      @click.prevent="hamburgerOpen = !hamburgerOpen"
-    >
+    <a class="knifeable hamburger" href="#" @click.prevent="toggleHamburger">
       <span class="hamburger-icon block relative">
         <span v-for="n in 3" :key="n" class="block absolute w-full"></span>
       </span>
     </a>
+    <svg
+      class="shape-overlays"
+      :class="{ 'is-opened': isHamburgerOpen }"
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+      ref="shape-overlays"
+    >
+      <path class="shape-overlays__path"></path>
+      <path class="shape-overlays__path"></path>
+      <path class="shape-overlays__path"></path>
+    </svg>
   </nav>
 </template>
 
 <script>
-import Parallax from 'parallax-js'
-
 export default {
   name: 'nav-bar',
   data() {
     return {
-      hamburgerOpen: false
+      isHamburgerOpen: false,
+      shapeOverlays: {
+        el: null,
+        isAnimating: false,
+        paths: [],
+        numPoints: 18,
+        duration: 600,
+        delayPointsArray: [],
+        delayPointsMax: 300,
+        delayPerPath: 80,
+        timeStart: Date.now()
+      },
+      // these easing functions are based on the code of glsl-easing module.
+      // https://github.com/glslify/glsl-easings
+      ease: {
+        exponentialIn: t => {
+          return t === 0.0 ? t : Math.pow(2.0, 10.0 * (t - 1.0))
+        },
+        exponentialOut: t => {
+          return t === 1.0 ? t : 1.0 - Math.pow(2.0, -10.0 * t)
+        },
+        exponentialInOut: t => {
+          return t === 0.0 || t === 1.0
+            ? t
+            : t < 0.5
+            ? +0.5 * Math.pow(2.0, 20.0 * t - 10.0)
+            : -0.5 * Math.pow(2.0, 10.0 - t * 20.0) + 1.0
+        },
+        sineOut: t => {
+          const HALF_PI = 1.5707963267948966
+          return Math.sin(t * HALF_PI)
+        },
+        circularInOut: t => {
+          return t < 0.5
+            ? 0.5 * (1.0 - Math.sqrt(1.0 - 4.0 * t * t))
+            : 0.5 * (Math.sqrt((3.0 - 2.0 * t) * (2.0 * t - 1.0)) + 1.0)
+        },
+        cubicIn: t => {
+          return t * t * t
+        },
+        cubicOut: t => {
+          const f = t - 1.0
+          return f * f * f + 1.0
+        },
+        cubicInOut: t => {
+          return t < 0.5
+            ? 4.0 * t * t * t
+            : 0.5 * Math.pow(2.0 * t - 2.0, 3.0) + 1.0
+        },
+        quadraticOut: t => {
+          return -t * (t - 2.0)
+        },
+        quarticOut: t => {
+          return Math.pow(t - 1.0, 3.0) * (1.0 - t) + 1.0
+        }
+      }
     }
   },
   mounted() {
-    // new Parallax(this.$el)
+    this.shapeOverlays.el = this.$refs['shape-overlays']
+    this.shapeOverlays.paths = this.shapeOverlays.el.querySelectorAll('path')
+  },
+  methods: {
+    toggleHamburger() {
+      if (this.shapeOverlays.isAnimating) return
+      this.shapeOverlays.isAnimating = true
+      this.toggleShapeOverlays()
+    },
+    toggleShapeOverlays() {
+      const range = 4 * Math.random() + 6
+      const { numPoints, delayPointsArray, delayPointsMax } = this.shapeOverlays
+
+      for (let i = 0; i < numPoints; i++) {
+        const radian = (i / (numPoints - 1)) * Math.PI
+        delayPointsArray[i] =
+          ((Math.sin(-radian) + Math.sin(-radian * range) + 2) / 4) *
+          delayPointsMax
+      }
+
+      this.isHamburgerOpen = !this.isHamburgerOpen
+      if (this.isHamburgerOpen) {
+        this.$root.$emit('nav-toggled', true)
+      }
+
+      this.shapeOverlays.timeStart = Date.now()
+      this.renderLoop()
+    },
+    updateShapePath(time) {
+      const points = [],
+        { numPoints, delayPointsArray, duration } = this.shapeOverlays
+
+      for (let i = 0; i < numPoints + 1; i++) {
+        points[i] =
+          this.ease.cubicInOut(
+            Math.min(Math.max(time - delayPointsArray[i], 0) / duration, 1)
+          ) * 100
+      }
+
+      let str = ''
+      str += this.isHamburgerOpen
+        ? `M 0 0 V ${points[0]} `
+        : `M 0 ${points[0]} `
+      for (let i = 0; i < numPoints - 1; i++) {
+        const p = ((i + 1) / (numPoints - 1)) * 100
+        const cp = p - ((1 / (numPoints - 1)) * 100) / 2
+        str += `C ${cp} ${points[i]} ${cp} ${points[i + 1]} ${p} ${
+          points[i + 1]
+        } `
+      }
+      str += this.isHamburgerOpen ? 'V 0 H 0' : 'V 100 H 0'
+
+      return str
+    },
+    renderShapes() {
+      const { paths, timeStart, delayPerPath } = this.shapeOverlays
+
+      if (this.isHamburgerOpen) {
+        for (let i = 0; i < paths.length; i++) {
+          paths[i].setAttribute(
+            'd',
+            this.updateShapePath(Date.now() - (timeStart + delayPerPath * i))
+          )
+        }
+      } else {
+        for (let i = 0; i < paths.length; i++) {
+          paths[i].setAttribute(
+            'd',
+            this.updateShapePath(
+              Date.now() - (timeStart + delayPerPath * (paths.length - i - 1))
+            )
+          )
+        }
+      }
+    },
+    renderLoop() {
+      this.renderShapes()
+
+      const {
+        timeStart,
+        duration,
+        delayPerPath,
+        paths,
+        delayPointsMax
+      } = this.shapeOverlays
+
+      if (
+        Date.now() - timeStart <
+        duration + delayPerPath * (paths.length - 1) + delayPointsMax
+      ) {
+        requestAnimationFrame(() => {
+          this.renderLoop()
+        })
+      } else {
+        if (this.isHamburgerOpen === false) {
+          this.$root.$emit('nav-toggled', false)
+        }
+
+        this.shapeOverlays.isAnimating = false
+      }
+    }
   }
 }
 </script>
@@ -89,6 +249,7 @@ export default {
             margin: 0.5rem
             justify-content: center
             align-items: center
+            z-index: 5000
         }
 
         .hamburger-icon {
@@ -205,6 +366,34 @@ export default {
             }
         }
     }
+}
+
+.shape-overlays {
+  width: 100vw
+  height: 100vh
+  position: fixed
+  pointer-events none
+  top: 0
+  left: 0
+  z-index: 4999
+
+  path {
+    &:nth-of-type(1) {
+      fill: #c4dbea
+    }
+
+    &:nth-of-type(2) {
+      fill: #4c688b
+    }
+
+    &:nth-of-type(3) {
+      fill: #2e496a
+    }
+  }
+
+  &.is-opened {
+    pointer-events auto
+  }
 }
 
 @keyframes rotation {
