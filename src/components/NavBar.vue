@@ -1,7 +1,31 @@
 <template>
   <nav class="top-nav flex justify-end fixed pin-x px-8 pt-6">
     <a
-      class="knifeable vvspaceship"
+      class="knifeable download has-title"
+      href="https://itch.io/profile/vvspaceship"
+      target="_blank"
+      name="Download Game"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        id="Rounded"
+        class="fill-current"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M18.705,7.004C17.839,4.056,15.149,2,12,2C9.709,2,7.561,3.138,6.258,5.004C2.479,5.143-0.486,8.523,0.066,12.44  C0.523,15.677,3.445,18,6.714,18L9,18v-5c0-1.657,1.343-3,3-3h0c1.657,0,3,1.343,3,3v5l3.266,0c2.842,0,5.388-2.054,5.7-4.878  C24.323,9.882,21.846,7.119,18.705,7.004z"
+          id="cloud"
+        ></path>
+        <g>
+          <path
+            d="M12,12L12,12c0.552,0,1,0.448,1,1v7.001h2.087h0.078c0.372,0,0.558,0.449,0.295,0.712l-3.165,3.165   c-0.163,0.163-0.427,0.163-0.59,0L8.54,20.713c-0.263-0.263-0.077-0.712,0.295-0.712h0.078H11V13C11,12.448,11.448,12,12,12z"
+            id="arrow"
+          ></path>
+        </g>
+      </svg>
+    </a>
+    <a
+      class="knifeable vvspaceship has-title"
       href="https://vvspaceship.website"
       target="_blank"
       name="very very spaceship"
@@ -45,6 +69,8 @@ export default {
 
 <style lang="stylus">
 .top-nav {
+    z-index: 15000
+
     a {
         color: #fff
 
@@ -88,6 +114,10 @@ export default {
         svg {
             width: 1.8rem
             height: 1.8rem
+
+            &, & * {
+                transition: all .18s ease
+            }
         }
 
         &:hover {
@@ -99,15 +129,29 @@ export default {
 
             svg {
                 fill: var(--color-link)
+            }
+        }
+    }
 
-                &, & * {
-                    transition: all .15s ease
+    .download {
+        svg {
+            overflow visible
+        }
+
+        &:hover {
+            svg {
+                #cloud {
+                    transform translateY(-0.05rem)
+                }
+
+                #arrow {
+                    transform translateY(0.085rem)
                 }
             }
         }
     }
 
-    .vvspaceship {
+    .has-title {
         position: relative
 
         &:before {
@@ -126,6 +170,15 @@ export default {
             transform: translateY(50%)
         }
 
+        &:hover {
+            &:before {
+                opacity: 1
+                transform: translateY(115%)
+            }
+        }
+    }
+
+    .vvspaceship {
         svg {
             overflow: visible
             perspective 800px
@@ -137,11 +190,6 @@ export default {
         }
 
         &:hover {
-            &:before {
-                opacity: 1
-                transform: translateY(115%)
-            }
-
             svg {
                 #trail {
                     animation thrusting 0.86s linear infinite
