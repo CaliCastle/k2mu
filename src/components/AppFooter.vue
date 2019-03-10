@@ -1,6 +1,6 @@
 <template>
   <footer class="container mx-auto py-12">
-    <div class="flex justify-center items-baseline">
+    <div class="flex justify-center items-baseline" data-depth="-0.44">
       <p class="text-2xl text-center">
         <span class="vvspaceship-text mr-2">&copy;</span>
         <span>{{ new Date().getFullYear() }} // </span>
@@ -25,12 +25,21 @@
 </template>
 
 <script>
+import Parallax from 'parallax-js'
+
 export default {
-  name: 'app-footer'
+  name: 'app-footer',
+  mounted() {
+    new Parallax(this.$el)
+  }
 }
 </script>
 
 <style lang="stylus" scoped>
+footer > div {
+  display: flex !important
+}
+
 svg {
   overflow: visible
 

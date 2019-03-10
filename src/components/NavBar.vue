@@ -56,6 +56,8 @@
 </template>
 
 <script>
+import Parallax from 'parallax-js'
+
 export default {
   name: 'nav-bar',
   data() {
@@ -63,7 +65,9 @@ export default {
       hamburgerOpen: false
     }
   },
-  methods: {}
+  mounted() {
+    // new Parallax(this.$el)
+  }
 }
 </script>
 

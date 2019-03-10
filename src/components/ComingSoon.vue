@@ -2,15 +2,21 @@
   <div
     class="coming-soon flex flex-col w-full h-screen justify-center items-center pt-16 md:p-0"
   >
-    <div class="masked mt-24 mb-6">
-      <h1>Knife 2<br />Meat U</h1>
+    <div class="masked mt-24 mb-6" ref="title">
+      <h1 data-depth="0.15">Knife 2<br />Meat U</h1>
     </div>
-    <p class="text-grey text-5xl flex items-center">
-      <span>Coming Soon</span>
+    <p
+      class="text-grey text-5xl flex justify-center items-center"
+      ref="subtitle"
+    >
+      <span data-depth="-0.4">Coming Soon</span>
+    </p>
+    <div class="crab my-6" ref="crab">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 100 125"
-        class="fill-current ml-3 inline-block w-24"
+        data-depth="0.065"
+        class="fill-current ml-3 inline-block w-32"
       >
         <g>
           <path
@@ -24,13 +30,20 @@
           ></path>
         </g>
       </svg>
-    </p>
+    </div>
   </div>
 </template>
 
 <script>
+import Parallax from 'parallax-js'
+
 export default {
-  name: 'coming-soon'
+  name: 'coming-soon',
+  mounted() {
+    new Parallax(this.$refs.title)
+    new Parallax(this.$refs.subtitle)
+    new Parallax(this.$refs.crab)
+  }
 }
 </script>
 
@@ -38,10 +51,11 @@ export default {
 .coming-soon {
   .masked {
     animation grandOpening 0.78s cubic-bezier(0.57, 0, 0.22, 1.3) both
-    background url('../assets/teaser.gif') no-repeat
-    background-size cover
-    background-position 90% 50%
+
     &, & * {
+      background url('../assets/teaser.gif') no-repeat
+      background-size cover
+      background-position 90% 50%
       color var(--color-text)
       -webkit-background-clip text
       -webkit-text-fill-color rgba(#b52325, 0.2)
@@ -59,10 +73,11 @@ export default {
 
   p {
     animation grandOpening 0.35s 0.75s cubic-bezier(0.57, 0, 0.22, 1.3) both
+  }
 
-    svg {
-      animation crabComesIn 0.255s 1.38s both
-    }
+  .crab svg {
+    fill: var(--color-link)
+    animation crabComesIn 0.175s 1.185s cubic-bezier(0.57, 0, 0.22, 1.3) both
   }
 }
 
@@ -81,12 +96,12 @@ export default {
 @keyframes crabComesIn {
   0% {
     opacity: 0
-    transform translateX(2rem)
+    transform translateX(2rem) scale(0.82)
   }
 
   100% {
     opacity: 1
-    transform translateX(0)
+    transform translateX(0) scale(1)
   }
 }
 </style>
