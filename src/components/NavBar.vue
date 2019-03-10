@@ -126,16 +126,64 @@ export default {
             transform: translateY(50%)
         }
 
+        svg {
+            overflow: visible
+            perspective 800px
+
+            #body {
+                transform-origin 50% 50%
+                transform-style preserve-3d
+            }
+        }
+
         &:hover {
             &:before {
                 opacity: 1
                 transform: translateY(115%)
             }
 
-            #trail {
+            svg {
+                #trail {
+                    animation thrusting 0.86s linear infinite
+                }
 
+                #body {
+                    animation rotation 1.65s steps(6) infinite
+                }
             }
         }
+    }
+}
+
+@keyframes rotation {
+    0% {
+        transform: translate3d(0, 0, 0)
+    }
+
+    25% {
+        transform: translate3d(-4%, 3%, 0)
+    }
+
+    75% {
+        transform: translate3d(5%, -3%, 0)
+    }
+
+    100% {
+        transform: translate3d(0, 0, 0)
+    }
+}
+
+@keyframes thrusting {
+    0% {
+        transform translate3d(0, 0, 0)
+    }
+
+    50% {
+        transform translate3d(4.5%, 4.5%, 0)
+    }
+
+    100% {
+        transform translate3d(0, 0, 0)
     }
 }
 </style>

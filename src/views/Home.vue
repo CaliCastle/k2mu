@@ -15,10 +15,8 @@ export default {
   components: { ComingSoon, KnifeCursor },
   data() {
     return {
-      ready: true
+      ready: false
     }
   }
 }
 </script>
-
-<style lang="stylus"></style>

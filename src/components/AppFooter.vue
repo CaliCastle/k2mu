@@ -29,3 +29,17 @@ export default {
   name: 'app-footer'
 }
 </script>
+
+<style lang="stylus" scoped>
+svg {
+  overflow: visible
+
+  #trail {
+    animation thrusting 0.84s linear infinite
+  }
+
+  #body {
+    animation rotation 1.8s linear infinite
+  }
+}
+</style>
