@@ -56,7 +56,10 @@
         class="menu fixed w-screen h-screen pin-l pin-t flex flex-col justify-center items-center"
         :style="{ transitionDelay: isHamburgerOpen ? '0.446s' : '0.12s' }"
       >
-        <div class="flex flex-col justify-center items-center">
+        <div
+          class="flex flex-col justify-center items-center get-game"
+          :style="{ transitionDelay: isHamburgerOpen ? '0.575s' : '0.04s' }"
+        >
           <span class="text-4xl">
             Get
             <b class="text-5xl text-red-lighter">Knife 2 Meat U</b> On:
@@ -78,7 +81,10 @@
             </svg>
           </a>
         </div>
-        <div class="mt-12 flex flex-col justify-center items-center">
+        <div
+          class="mt-12 flex flex-col justify-center items-center social"
+          :style="{ transitionDelay: isHamburgerOpen ? '0.658s' : '0.1s' }"
+        >
           <span class="text-4xl">Join Us On:</span>
           <div class="flex justify-center items-center mt-2">
             <a
@@ -476,16 +482,38 @@ export default {
   opacity 0
   pointer-events none
   z-index 15000
-  transition all 0.395s ease
+  transition all 0.395s ease-in-out
 
   a svg {
     width 2.7rem
     height auto
   }
 
+  .get-game {
+    opacity: 0
+    transform translateY(-2rem)
+    transition all 0.23s ease
+  }
+
+  .social {
+    opacity: 0
+    transform translateY(3.5rem)
+    transition all 0.28s ease
+  }
+
   .is-opened & {
     opacity 1
     pointer-events auto
+
+    .get-game {
+      opacity: 1
+      transform translateY(0)
+    }
+
+    .social {
+      opacity: 1
+      transform translateY(0)
+    }
   }
 }
 
