@@ -348,12 +348,13 @@ export default {
         .hamburger-icon {
             width: 2.3rem
             height: 2rem
+            transition: all .259s ease
 
             span {
                 background: var(--color-text)
                 height: 0.2rem
                 border-radius: 4px
-                transition: all .189s ease
+                transition: all .259s ease
 
                 &:nth-of-type(1) {
                     top: .25rem
@@ -384,14 +385,6 @@ export default {
             .hamburger-icon {
                 span {
                     background: var(--color-link)
-
-                  &:nth-of-type(2) {
-                    transform translate3d(-0.3rem, 0.1rem, 0)
-                  }
-
-                  &:nth-of-type(3) {
-                    transform translate3d(0.3rem, 0.1rem, 0)
-                  }
                 }
             }
 
@@ -474,6 +467,23 @@ export default {
     .download {
       opacity 0
       pointer-events none
+    }
+
+    .hamburger-icon {
+      transform translateY(-0.2rem)
+      span {
+        &:nth-of-type(1) {
+          transform rotate(45deg) translate3d(0.35rem, 0.75rem, 0)
+        }
+
+        &:nth-of-type(2) {
+          opacity: 0
+        }
+
+        &:nth-of-type(3) {
+          transform rotate(-45deg) translate3d(0.1rem, -0.45rem, 0)
+        }
+      }
     }
   }
 }
