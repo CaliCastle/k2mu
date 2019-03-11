@@ -2,7 +2,7 @@
   <div
     class="coming-soon flex flex-col w-full h-screen justify-center items-center pt-16 md:p-0"
   >
-    <div class="masked mt-24 mb-6" ref="title">
+    <div class="masked mt-24 mb-6 text-center" ref="title">
       <h1 data-depth="0.15">Knife 2<br />Meat U</h1>
     </div>
     <p

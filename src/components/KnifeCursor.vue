@@ -38,7 +38,7 @@ export default {
         stuckX: {},
         stuckY: {},
         fillOuterCursor: {},
-        z: 12000
+        z: 16000
       }
     }
   },
@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     navToggled(isOpened) {
-      this.cursorMeta.z = isOpened === true ? 16000 : 12000
+      this.cursorMeta.z = isOpened === true ? 17000 : 16000
     },
     setupCursorTracking() {
       document.addEventListener('mousemove', e => {
@@ -214,7 +214,6 @@ export default {
   height: 3rem
   left: 1.32rem
   top: 1.3rem
-  z-index: 12000
   background: url('../assets/claw@2x.png') center no-repeat
   background-size: contain
 
@@ -223,12 +222,10 @@ export default {
   height: 3.5rem;
   left: -0.5rem;
   top: -0.25rem;
-  z-index: 11000
   background: url('../assets/knife@2x.png') center no-repeat
   background-size: contain
 
 .cursor--canvas
   width: 100vw
   height: 100vh
-  z-index: 10000
 </style>
