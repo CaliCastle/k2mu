@@ -62,7 +62,7 @@
         >
           <span class="text-4xl">
             Get
-            <b class="text-5xl text-red-lighter">Knife 2 Meat U</b> On:
+            <b class="text-5xl">Knife 2 Meat U</b> On:
           </span>
           <a
             class="knifeable m-4 has-title"
@@ -493,6 +493,10 @@ export default {
     opacity: 0
     transform translateY(-2rem)
     transition all 0.23s ease
+
+    b {
+      color: var(--color-link)
+    }
   }
 
   .social {
