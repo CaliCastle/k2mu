@@ -52,7 +52,7 @@ export default {
   .masked {
     animation grandOpening 0.78s cubic-bezier(0.57, 0, 0.22, 1.3) both
 
-    &, & * {
+    & * {
       background url('../assets/teaser.gif') no-repeat
       background-size cover
       background-position 90% 50%
