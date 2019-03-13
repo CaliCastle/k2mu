@@ -1,20 +1,20 @@
 <template>
   <div class="k2mu min-h-screen">
-    <ComingSoon v-if="!ready" />
-    <main v-else></main>
+    <Hero />
+    <main></main>
     <KnifeCursor />
     <Particles />
   </div>
 </template>
 
 <script>
-import ComingSoon from '../components/ComingSoon'
+import Hero from '../components/Hero'
 import KnifeCursor from '../components/KnifeCursor'
 import Particles from '../components/Particles'
 
 export default {
   name: 'home',
-  components: { Particles, ComingSoon, KnifeCursor },
+  components: { Particles, Hero, KnifeCursor },
   data() {
     return {
       ready: false

@@ -1,16 +1,24 @@
 <template>
   <div
-    class="coming-soon flex flex-col w-full h-screen justify-center items-center pt-16 md:p-0"
+    class="hero relative flex flex-col w-full h-screen justify-center items-center pt-16 md:p-0"
   >
     <div class="masked mt-24 mb-6 text-center" ref="title">
       <h1 data-depth="0.15">Knife 2<br />Meat U</h1>
     </div>
-    <p
-      class="text-grey text-5xl flex justify-center items-center"
+    <div
+      class="subtitle text-grey text-5xl flex justify-center items-center"
       ref="subtitle"
     >
-      <span data-depth="-0.4">Coming Soon</span>
-    </p>
+      <div data-depth="-0.4" :style="{ pointerEvents: 'auto' }">
+        <a
+          class="knifeable text-white no-underline px-8 py-5 bg-red-light outline-none rounded-lg"
+          :href="$root.links.game.itch"
+          target="_blank"
+        >
+          Free 2 Download
+        </a>
+      </div>
+    </div>
     <div class="crab my-6" ref="crab">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -38,7 +46,7 @@
 import Parallax from 'parallax-js'
 
 export default {
-  name: 'coming-soon',
+  name: 'hero',
   mounted() {
     new Parallax(this.$refs.title)
     new Parallax(this.$refs.subtitle)
@@ -48,7 +56,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.coming-soon {
+.hero {
+  z-index 12000
+
   .masked {
     animation grandOpening 0.78s cubic-bezier(0.57, 0, 0.22, 1.3) both
 
@@ -71,7 +81,7 @@ export default {
     }
   }
 
-  p {
+  .subtitle {
     animation grandOpening 0.35s 0.75s cubic-bezier(0.57, 0, 0.22, 1.3) both
   }
 

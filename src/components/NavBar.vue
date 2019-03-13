@@ -66,7 +66,7 @@
           </span>
           <a
             class="knifeable m-4 has-title"
-            href="https://itch.io/profile/vvspaceship"
+            :href="$root.links.game.itch"
             target="_blank"
             name="itch.io"
           >
