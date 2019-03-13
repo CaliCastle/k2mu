@@ -62,13 +62,13 @@ export default {
   .masked {
     animation grandOpening 0.78s cubic-bezier(0.57, 0, 0.22, 1.3) both
 
-    & * {
+    h1 {
       background url('../assets/teaser.gif') no-repeat
       background-size cover
       background-position 90% 50%
       color var(--color-text)
       -webkit-background-clip text
-      -webkit-text-fill-color rgba(#b52325, 0.2)
+      -webkit-text-fill-color transparent
     }
   }
 
